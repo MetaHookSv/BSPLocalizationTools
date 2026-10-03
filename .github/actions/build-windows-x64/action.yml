@@ -22,13 +22,13 @@ runs:
       shell: cmd
       run: dotnet test BSPLocalizationTools.sln -c Release --no-restore
 
-    - name: Publish GUI
+    - name: Publish GUI (single file)
       shell: cmd
-      run: dotnet publish src\BSPLocalizationTools\BSPLocalizationTools.csproj -c Release -r win-x64 --self-contained true -o BSPLocalizationTools-Output\GUI
+      run: dotnet publish src\BSPLocalizationTools\BSPLocalizationTools.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o BSPLocalizationTools-Output\GUI
 
-    - name: Publish CLI
+    - name: Publish CLI (single file)
       shell: cmd
-      run: dotnet publish src\BSPLocalizationToolsCLI\BSPLocalizationToolsCLI.csproj -c Release -r win-x64 --self-contained true -o BSPLocalizationTools-Output\CLI
+      run: dotnet publish src\BSPLocalizationToolsCLI\BSPLocalizationToolsCLI.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -o BSPLocalizationTools-Output\CLI
 
     - name: Copy README to output
       shell: cmd
