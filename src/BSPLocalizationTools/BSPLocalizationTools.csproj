@@ -25,10 +25,19 @@
     <ProjectReference Include="..\BSPLocalizationToolsCore\BSPLocalizationToolsCore.csproj" />
   </ItemGroup>
 
+  <!-- Resources.Designer.cs is generated at build time by ResxSourceGenerator,
+       so it is not checked in and does not require Visual Studio. -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="5.0.0-1.25277.114">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Update="Lang\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <GenerateSource>true</GenerateSource>
+      <Public>true</Public>
       <LogicalName>BSPLocalizationTools.GUI.Lang.Resources.resources</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
@@ -40,13 +49,5 @@
     <EmbeddedResource Update="Lang\Resources.zh-TW.resx">
       <LogicalName>BSPLocalizationTools.GUI.Lang.Resources.zh-TW.resources</LogicalName>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Lang\Resources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

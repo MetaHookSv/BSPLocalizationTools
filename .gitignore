@@ -3,3 +3,6 @@
 .vs/
 .env
 **/.env
+
+# Generated at build time by Microsoft.CodeAnalysis.ResxSourceGenerator
+**/Resources.Designer.cs
