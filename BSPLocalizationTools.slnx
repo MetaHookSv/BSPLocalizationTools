@@ -1,0 +1,15 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/BSPLocalizationTools/BSPLocalizationTools.csproj" />
+    <Project Path="src/BSPLocalizationToolsCLI/BSPLocalizationToolsCLI.csproj" />
+    <Project Path="src/BSPLocalizationToolsCore/BSPLocalizationToolsCore.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BSPLocalizationTools.Tests/BSPLocalizationTools.Tests.csproj" />
+  </Folder>
+</Solution>

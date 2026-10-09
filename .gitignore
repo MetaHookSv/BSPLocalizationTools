@@ -3,6 +3,8 @@
 .vs/
 .env
 **/.env
+/BSPLocalizationTools-Output/
+/build/
 
 # Generated at build time by Microsoft.CodeAnalysis.ResxSourceGenerator
 **/Resources.Designer.cs

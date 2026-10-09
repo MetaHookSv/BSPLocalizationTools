@@ -63,3 +63,28 @@ The **Settings** tab loads and saves LLM and prompt path settings to `.env`.
 ## Encodings
 
 CSV output is always written as UTF-8 with BOM.
+
+## Build
+
+Use Windows x64 with the **.NET 10 SDK**. Publishing the GUI and CLI as Native
+AOT additionally requires the Visual Studio 2022 **Desktop development with C++**
+workload (MSVC linker) and a Windows SDK.
+
+From the repository root:
+
+```powershell
+dotnet restore BSPLocalizationTools.slnx
+dotnet test BSPLocalizationTools.slnx -c Release
+dotnet run --project src\BSPLocalizationTools                          # Avalonia GUI
+dotnet run --project src\BSPLocalizationToolsCLI -- "-bsp=path\to\map.bsp"   # CLI
+```
+
+Both executables are published as self-contained Native AOT programs, so the
+target machine does not need the .NET runtime. Native AOT cannot fold Avalonia's
+native backends into the executable, so the GUI ships as the executable plus its
+native libraries:
+
+```powershell
+dotnet publish src\BSPLocalizationTools\BSPLocalizationTools.csproj -c Release -r win-x64 -o out\GUI
+dotnet publish src\BSPLocalizationToolsCLI\BSPLocalizationToolsCLI.csproj -c Release -r win-x64 -o out\CLI
+```
