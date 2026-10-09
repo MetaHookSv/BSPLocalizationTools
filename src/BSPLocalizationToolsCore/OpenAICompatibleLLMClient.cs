@@ -1,6 +1,7 @@
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 
 namespace BSPLocalizationTools;
 
@@ -43,18 +44,17 @@ public sealed class OpenAICompatibleLLMClient(HttpClient httpClient) : ILLMClien
         LLMOptions options,
         CancellationToken cancellationToken)
     {
-        var body = new Dictionary<string, object?>
-        {
-            ["model"] = options.Model,
-            ["messages"] = messages.Select(m => new { role = m.Role, content = m.Content }).ToArray(),
-            ["reasoning_effort"] = options.Effort,
-        };
-        if (options.Temperature is not null)
-        {
-            body["temperature"] = options.Temperature;
-        }
+        var body = new ChatCompletionRequest(
+            options.Model!,
+            messages.Select(m => new ChatRequestMessage(m.Role, m.Content)).ToArray(),
+            options.Effort,
+            options.Temperature);
 
-        using var request = CreateJsonRequest(GetBaseUrl(options) + "/chat/completions", options, body);
+        using var request = CreateJsonRequest(
+            GetBaseUrl(options) + "/chat/completions",
+            options,
+            body,
+            LlmRequestJsonContext.Default.ChatCompletionRequest);
         using var response = await httpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -74,22 +74,18 @@ public sealed class OpenAICompatibleLLMClient(HttpClient httpClient) : ILLMClien
         LLMOptions options,
         CancellationToken cancellationToken)
     {
-        var body = new Dictionary<string, object?>
-        {
-            ["model"] = options.Model,
-            ["input"] = new[]
-            {
-                new { role = "user", content = string.Join("\n\n", messages.Select(m => m.Content)) },
-            },
-            ["reasoning"] = new { effort = options.Effort },
-            ["stream"] = true,
-        };
-        if (options.Temperature is not null)
-        {
-            body["temperature"] = options.Temperature;
-        }
+        var body = new ResponsesRequest(
+            options.Model!,
+            [new ResponsesInputMessage("user", string.Join("\n\n", messages.Select(m => m.Content)))],
+            new ResponsesReasoning(options.Effort),
+            true,
+            options.Temperature);
 
-        using var request = CreateJsonRequest(GetBaseUrl(options) + "/responses", options, body);
+        using var request = CreateJsonRequest(
+            GetBaseUrl(options) + "/responses",
+            options,
+            body,
+            LlmRequestJsonContext.Default.ResponsesRequest);
         request.Headers.Accept.Clear();
         request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/event-stream"));
         using var response = await httpClient.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken);
@@ -101,12 +97,16 @@ public sealed class OpenAICompatibleLLMClient(HttpClient httpClient) : ILLMClien
             : result;
     }
 
-    private static HttpRequestMessage CreateJsonRequest(string uri, LLMOptions options, object body)
+    private static HttpRequestMessage CreateJsonRequest<TBody>(
+        string uri,
+        LLMOptions options,
+        TBody body,
+        JsonTypeInfo<TBody> jsonTypeInfo)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, uri);
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
         request.Headers.UserAgent.ParseAdd("BSPLocalizationTools/1.0");
-        request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+        request.Content = new StringContent(JsonSerializer.Serialize(body, jsonTypeInfo), Encoding.UTF8, "application/json");
         return request;
     }
 

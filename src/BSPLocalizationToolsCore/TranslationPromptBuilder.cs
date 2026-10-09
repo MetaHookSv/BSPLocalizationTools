@@ -19,27 +19,22 @@ public static class TranslationPromptBuilder
         var instructions = string.IsNullOrWhiteSpace(customPrompt)
             ? BuiltInPrompt
             : customPrompt.Trim();
-        var payload = new
-        {
-            target_language = targetLanguage,
-            output_contract = new
-            {
-                format = "json",
-                schema = """{"translations":[{"id":0,"translation":"..."}]}""",
-                rules = new[]
-                {
+        var payload = new PromptPayload(
+            targetLanguage,
+            new PromptOutputContract(
+                "json",
+                """{"translations":[{"id":0,"translation":"..."}]}""",
+                [
                     "Return only valid JSON.",
                     "Include every input id exactly once.",
                     "Keep literal \\n as backslash-n text.",
-                },
-            },
-            inputs = sourceMessages.Select((text, id) => new { id, text }).ToArray(),
-        };
+                ]),
+            sourceMessages.Select((text, id) => new PromptInput(id, text)).ToArray());
 
         return
         [
             new LLMMessage("system", instructions),
-            new LLMMessage("user", JsonSerializer.Serialize(payload)),
+            new LLMMessage("user", JsonSerializer.Serialize(payload, LlmRequestJsonContext.Default.PromptPayload)),
         ];
     }
 }
