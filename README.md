@@ -19,7 +19,7 @@ dotnet run --project src\BSPLocalizationToolsCLI -- `
   "-llm_apikey=<key>"
 ```
 
-Output is written next to the BSP as `<map>_dictionary_<outlang>.csv`.
+Output will be written next to the `pizza_ya_san1.bsp` as `pizza_ya_san1_dictionary_schinese.csv` which can be loaded by [CaptionMod](https://github.com/MetaHookSv/CaptionMod).
 
 ## Arguments
 
@@ -56,9 +56,9 @@ BSPL10N_DEFAULT_PROMPTFILE=path\to\prompt.md
 ## GUI
 
 Run the Avalonia app from `src\BSPLocalizationTools`.
-The **Translate** tab supports selecting one or more `.bsp` files, starting or canceling
-translation, and viewing per-file progress and logs. The **Settings** tab loads and saves LLM and
-prompt path settings to `.env`.
+The **Translate** tab supports selecting one or more `.bsp` files, starting or canceling translation, and viewing per-file progress and logs.
+
+The **Settings** tab loads and saves LLM and prompt path settings to `.env`.
 
 ## Encodings
 
