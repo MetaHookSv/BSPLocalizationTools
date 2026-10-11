@@ -3,6 +3,7 @@ using BSPLocalizationTools.GUI.Lang;
 
 namespace BSPLocalizationTools.Tests;
 
+[Collection("GUI localization")]
 public sealed class GuiLocalizerTests
 {
     [Theory]
@@ -41,3 +42,7 @@ public sealed class GuiLocalizerTests
         Assert.Equal(expected, localizer.GetStageText(stage));
     }
 }
+
+// GUI localization tests share the process-wide Resources.Culture override.
+[CollectionDefinition("GUI localization", DisableParallelization = true)]
+public sealed class GuiLocalizationCollection;

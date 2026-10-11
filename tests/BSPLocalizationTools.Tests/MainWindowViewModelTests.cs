@@ -3,6 +3,7 @@ using System.Globalization;
 
 namespace BSPLocalizationTools.Tests;
 
+[Collection("GUI localization")]
 public sealed class MainWindowViewModelTests
 {
     [Fact]
