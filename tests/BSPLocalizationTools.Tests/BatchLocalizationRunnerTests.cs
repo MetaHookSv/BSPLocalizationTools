@@ -19,7 +19,7 @@ public sealed class BatchLocalizationRunnerTests
                     new LocalizationRequest(first, "schinese", null, CreateOptions()),
                     new LocalizationRequest(second, "schinese", null, CreateOptions()),
                 ]),
-            new Progress<TranslationProgress>(progressEvents.Add),
+            new ListProgress(progressEvents),
             CancellationToken.None);
 
         Assert.True(results[0].Succeeded);
@@ -116,14 +116,6 @@ public sealed class BatchLocalizationRunnerTests
             CancellationToken cancellationToken)
         {
             return Task.FromResult("""{"translations":[{"id":0,"translation":"你好"}]}""");
-        }
-    }
-
-    private sealed class ListProgress(List<TranslationProgress> events) : IProgress<TranslationProgress>
-    {
-        public void Report(TranslationProgress value)
-        {
-            events.Add(value);
         }
     }
 

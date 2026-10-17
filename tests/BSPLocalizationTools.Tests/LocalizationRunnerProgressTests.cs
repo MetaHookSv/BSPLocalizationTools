@@ -19,7 +19,7 @@ public sealed class LocalizationRunnerProgressTests
                 "schinese",
                 null,
                 new LLMOptions("gpt-test", "sk-", null, null, "medium", null)),
-            new Progress<TranslationProgress>(progressEvents.Add),
+            new ListProgress(progressEvents),
             CancellationToken.None);
 
         Assert.Equal(Path.Combine(temp.Path, "fake_map_dictionary_schinese.csv"), result.OutputPath);
